@@ -17,11 +17,37 @@ import java.util.HashMap;
 public class SearchController {
 
     @RequestMapping(value = "")
+
     public String search(Model model) {
         model.addAttribute("columns", ListController.columnChoices);
+        model.addAttribute("searchType", "all");
         return "search";
     }
+     @RequestMapping(value = "/results")
 
-    // TODO #1 - Create handler to process search request and display results
+     public String search (Model model, @RequestParam String searchTerm,@RequestParam String searchType) {
 
-}
+         ArrayList<HashMap<String, String>> jobs;
+
+         if (searchType.equals("all")) {
+
+             jobs = JobData.findByValue(searchTerm);
+
+         } else {
+             jobs = JobData.findByColumnAndValue(searchType, searchTerm);
+
+         }
+
+         model.addAttribute("columns", ListController.columnChoices);
+         model.addAttribute("jobs", jobs);
+         model.addAttribute("searchType", searchType);
+
+         return "search";
+     }
+     }
+    // TODO #1 above - Create handler to process search request and display results
+    //see code example in stack overflow question 30380498 re: how to overload controller method using javaspring
+
+
+
+
